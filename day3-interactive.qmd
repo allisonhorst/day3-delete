@@ -4,6 +4,11 @@ format: html
 editor: visual
 ---
 
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
 ## Conditional statement
 
 ```{r}
@@ -77,5 +82,63 @@ mean_ht <- mean(height)
 for (i in seq_along(height)) {
   standardize_ht = height[i] / mean_ht
   print(standardize_ht)
+}
+```
+
+Write a for loop with a conditional (if) statement that returns the means of all NUMERIC variables in the penguins dataset.
+
+-   is.numeric (asks is this thing numeric?)
+
+-   mean(vec, na.rm = TRUE)
+
+```{r}
+
+for (i in seq_along(penguins)) {
+  if (is.numeric(penguins[[i]])) {
+    penguins_mean <- mean(penguins[[i]], na.rm = TRUE)
+    print(penguins_mean)
+  }
+}
+```
+
+## Functional programming for easier iteration
+
+Use apply() to iterate over rows or columns. MARGIN = 1 (rows), MARGIN = 2 (columns)
+
+```{r}
+apply(X = mtcars, MARGIN = 2, FUN = median)
+
+apply(mtcars, 2, median)
+```
+
+### dplyr::across()
+
+Starter: find the mean flipper length of penguins by species:
+
+```{r}
+penguins |> 
+  group_by(sex, species, island) |> 
+  summarize(mean_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
+            sd_flipper_length = sd(flipper_length_mm, na.rm = TRUE),
+            max_body_mass = max(body_mass_g, na.rm = TRUE))
+```
+
+```{r}
+penguins |> 
+  group_by(species, island) |> 
+  summarize(across(where(is.numeric), mean, na.rm = TRUE))
+```
+
+## Detecting a string pattern
+
+```{r}
+food <- "I love burritos"
+
+#str_detect(food, "burritos")
+
+if (str_detect(food, "burritos")) {
+  print("yay burritos!")
+} else {
+  print("What about burritos?")
 }
 ```
